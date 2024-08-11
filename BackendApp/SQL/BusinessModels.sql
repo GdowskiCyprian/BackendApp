@@ -1,0 +1,11 @@
+CREATE TABLE BusinessModels
+(
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    Name NVARCHAR(255) NOT NULL,
+    Description NVARCHAR(1000),
+    BusinessType NVARCHAR(255) NOT NULL,
+    City NVARCHAR(255) NOT NULL,
+    PostalCode NVARCHAR(50) NOT NULL,
+    Street NVARCHAR(255) NOT NULL,
+    BuildingNumber NVARCHAR(50) NOT NULL
+);
