@@ -1,11 +1,13 @@
 ﻿using BackendApp.Controllers.ViewModels;
 using BackendApp.Infrastructure;
 using BackendApp.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BackendApp.Controllers
 {
     [Controller]
+    [Authorize]
     public class ApiController : Controller
     {
         private readonly IDatabaseAccess _databaseAccess;
