@@ -9,5 +9,6 @@
         public string PostalCode { get; set; }
         public string Street { get; set; }
         public string BuildingNumber { get; set; }
+        public Guid OwnerId { get; set; }
     }
 }

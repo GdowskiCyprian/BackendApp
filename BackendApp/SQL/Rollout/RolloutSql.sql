@@ -1,3 +1,5 @@
+Use Data
+
 IF OBJECT_ID (N'BusinessModels', N'U') IS NULL
 BEGIN
 CREATE TABLE BusinessModels
@@ -9,7 +11,8 @@ CREATE TABLE BusinessModels
     City NVARCHAR(255) NOT NULL,
     PostalCode NVARCHAR(50) NOT NULL,
     Street NVARCHAR(255) NOT NULL,
-    BuildingNumber NVARCHAR(50) NOT NULL
+    BuildingNumber NVARCHAR(50) NOT NULL,
+	OwnerId uniqueidentifier NOT NULL
 );
 END
 GO
@@ -25,7 +28,8 @@ BEGIN
         City,
         PostalCode,
         Street,
-        BuildingNumber
+        BuildingNumber,
+		OwnerId
     FROM 
         BusinessModels
 END
@@ -39,11 +43,12 @@ CREATE OR ALTER PROCEDURE usp_InsertBusinessModel
     @City NVARCHAR(255),
     @PostalCode NVARCHAR(50),
     @Street NVARCHAR(255),
-    @BuildingNumber NVARCHAR(50)
+    @BuildingNumber NVARCHAR(50),
+	@OwnerId uniqueidentifier
 AS
 BEGIN
-    INSERT INTO BusinessModels (Name, Description, BusinessType, City, PostalCode, Street, BuildingNumber)
-    VALUES (@Name, @Description, @BusinessType, @City, @PostalCode, @Street, @BuildingNumber)
+    INSERT INTO BusinessModels (Name, Description, BusinessType, City, PostalCode, Street, BuildingNumber, OwnerId)
+    VALUES (@Name, @Description, @BusinessType, @City, @PostalCode, @Street, @BuildingNumber, @OwnerId)
 END
 
 GO
@@ -56,7 +61,8 @@ CREATE OR ALTER PROCEDURE usp_UpdateBusinessModel
     @City NVARCHAR(255),
     @PostalCode NVARCHAR(50),
     @Street NVARCHAR(255),
-    @BuildingNumber NVARCHAR(50)
+    @BuildingNumber NVARCHAR(50),
+	@OwnerId uniqueidentifier
 AS
 BEGIN
     UPDATE BusinessModels
@@ -66,7 +72,8 @@ BEGIN
         City = @City,
         PostalCode = @PostalCode,
         Street = @Street,
-        BuildingNumber = @BuildingNumber
+        BuildingNumber = @BuildingNumber,
+		OwnerId = @OwnerId
     WHERE Id = @Id
 END
 GO
@@ -79,3 +86,80 @@ BEGIN
     WHERE Id = @Id
 END
 
+IF OBJECT_ID (N'Visits', N'U') IS NULL
+BEGIN
+CREATE TABLE Visits
+(
+    Id INT PRIMARY KEY IDENTITY(1,1),
+    UserId uniqueidentifier NOT NULL,
+    BusinessId int not null,
+    VisitTime DateTime not null,
+	Email nvarchar(200) null,
+	PhoneNumber nvarchar(9) null,
+	IsConfirmed bit null
+);
+END
+GO
+
+
+CREATE OR ALTER PROCEDURE usp_GetVisits
+AS
+BEGIN
+    SELECT Id, UserId, BusinessId, VisitTime, Email, PhoneNumber, IsConfirmed
+    FROM Visits;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE usp_InsertVisit
+    @UserId UNIQUEIDENTIFIER,
+    @BusinessId INT,
+    @VisitTime DATETIME,
+    @Email NVARCHAR(200) = NULL,
+    @PhoneNumber NVARCHAR(9) = NULL,
+    @IsConfirmed BIT
+AS
+BEGIN
+    INSERT INTO Visits (UserId, BusinessId, VisitTime, Email, PhoneNumber, IsConfirmed)
+    VALUES (@UserId, @BusinessId, @VisitTime, @Email, @PhoneNumber, @IsConfirmed);
+END;
+GO
+
+CREATE OR ALTER PROCEDURE usp_UpdateVisit
+    @Id INT,
+    @UserId UNIQUEIDENTIFIER,
+    @BusinessId INT,
+    @VisitTime DATETIME,
+    @Email NVARCHAR(200) = NULL,
+    @PhoneNumber NVARCHAR(9) = NULL,
+    @IsConfirmed BIT
+AS
+BEGIN
+    UPDATE Visits
+    SET UserId = @UserId,
+        BusinessId = @BusinessId,
+        VisitTime = @VisitTime,
+        Email = @Email,
+        PhoneNumber = @PhoneNumber,
+        IsConfirmed = @IsConfirmed
+    WHERE Id = @Id;
+END;
+GO
+
+CREATE OR ALTER PROCEDURE usp_DeleteVisit
+    @Id INT
+AS
+BEGIN
+    DELETE FROM Visits
+    WHERE Id = @Id;
+END;
+go
+
+CREATE OR ALTER PROCEDURE usp_GetVisitsByDateRange
+    @DateFrom DATE,
+    @DateTo DATE
+AS
+BEGIN
+    SELECT Id, UserId, BusinessId, VisitTime, Email, PhoneNumber, IsConfirmed
+    FROM Visits
+    WHERE CAST(VisitTime AS DATE) BETWEEN @DateFrom AND @DateTo;
+END;

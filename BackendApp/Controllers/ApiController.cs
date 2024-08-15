@@ -25,7 +25,7 @@ namespace BackendApp.Controllers
         }
 
         [HttpPost("InsertBusinessModel")]
-        public async Task<ActionResult> InsertBusinessModel(BusinessViewModel model)
+        public async Task<ActionResult> InsertBusinessModel([FromBody] BusinessViewModel model)
         {
             var result = await _databaseAccess.InsertBusinessModelAsync(model);
             return result > 0 ? Ok() : StatusCode(500);
@@ -43,6 +43,42 @@ namespace BackendApp.Controllers
         {
             var result = await _databaseAccess.DeleteBusinessModelAsync(id);
             return result > 0 ? Ok() : StatusCode(500);
+        }
+
+        // Visits methods
+        [HttpGet("GetVisits")]
+        public async Task<ActionResult<List<VisitModel>>> GetVisits()
+        {
+            var visits = await _databaseAccess.GetVisitsAsync();
+            return Ok(visits);
+        }
+
+        [HttpPost("InsertVisit")]
+        public async Task<ActionResult> InsertVisit([FromBody]VisitViewModel model)
+        {
+            var result = await _databaseAccess.InsertVisitAsync(model);
+            return result > 0 ? Ok() : StatusCode(500);
+        }
+
+        [HttpPut("UpdateVisit")]
+        public async Task<ActionResult> UpdateVisit(VisitModel model)
+        {
+            var result = await _databaseAccess.UpdateVisitAsync(model);
+            return result > 0 ? Ok() : StatusCode(500);
+        }
+
+        [HttpDelete("DeleteVisit/{id}")]
+        public async Task<ActionResult> DeleteVisit(int id)
+        {
+            var result = await _databaseAccess.DeleteVisitAsync(id);
+            return result > 0 ? Ok() : StatusCode(500);
+        }
+
+        [HttpGet("GetVisitsByDateRange")]
+        public async Task<ActionResult<List<VisitModel>>> GetVisitsByDateRange(DateTime dateFrom, DateTime dateTo)
+        {
+            var visits = await _databaseAccess.GetVisitsByDateRangeAsync(dateFrom, dateTo);
+            return Ok(visits);
         }
     }
 }
