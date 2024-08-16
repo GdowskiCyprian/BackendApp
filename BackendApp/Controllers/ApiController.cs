@@ -32,7 +32,7 @@ namespace BackendApp.Controllers
         }
 
         [HttpPut("UpdateBusinessModel")]
-        public async Task<ActionResult> UpdateBusinessModel(BusinessModel model)
+        public async Task<ActionResult> UpdateBusinessModel([FromBody] BusinessModel model)
         {
             var result = await _databaseAccess.UpdateBusinessModelAsync(model);
             return result > 0 ? Ok() : StatusCode(500);
@@ -61,7 +61,7 @@ namespace BackendApp.Controllers
         }
 
         [HttpPut("UpdateVisit")]
-        public async Task<ActionResult> UpdateVisit(VisitModel model)
+        public async Task<ActionResult> UpdateVisit([FromBody] VisitModel model)
         {
             var result = await _databaseAccess.UpdateVisitAsync(model);
             return result > 0 ? Ok() : StatusCode(500);

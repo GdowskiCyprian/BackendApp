@@ -66,6 +66,7 @@ namespace BackendApp.Infrastructure
                     cmd.Parameters.AddWithValue("@PostalCode", model.PostalCode);
                     cmd.Parameters.AddWithValue("@Street", model.Street);
                     cmd.Parameters.AddWithValue("@BuildingNumber", model.BuildingNumber);
+                    cmd.Parameters.AddWithValue("@OwnerId", model.OwnerId);
 
                     await conn.OpenAsync();
                     return await cmd.ExecuteNonQueryAsync();
@@ -89,6 +90,7 @@ namespace BackendApp.Infrastructure
                     cmd.Parameters.AddWithValue("@PostalCode", model.PostalCode);
                     cmd.Parameters.AddWithValue("@Street", model.Street);
                     cmd.Parameters.AddWithValue("@BuildingNumber", model.BuildingNumber);
+                    cmd.Parameters.AddWithValue("@OwnerId", model.OwnerId);
 
                     await conn.OpenAsync();
                     return await cmd.ExecuteNonQueryAsync();
