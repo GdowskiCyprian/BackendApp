@@ -12,7 +12,7 @@ namespace BackendApp
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            var databaseConnectionString = args[0] ?? "";
             // Add services to the container.
 
             builder.Services.AddControllers();
@@ -73,9 +73,7 @@ namespace BackendApp
             });
             builder.Services.AddTransient<IDatabaseAccess>(provider =>
             {
-                var configuration = provider.GetRequiredService<IConfiguration>();
-                var connectionString = configuration.GetConnectionString("DatabaseConnection");
-                return new DatabaseAccess(connectionString);
+                return new DatabaseAccess(databaseConnectionString);
             });
 
 
