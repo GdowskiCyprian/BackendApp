@@ -12,7 +12,6 @@ namespace BackendApp
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            var databaseConnectionString = args[0] ?? "";
             // Add services to the container.
 
             builder.Services.AddControllers();
@@ -45,7 +44,6 @@ namespace BackendApp
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "My API", Version = "v1" });
 
-                // Configure JWT Authentication for Swagger
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     Name = "Authorization",
@@ -73,7 +71,7 @@ namespace BackendApp
             });
             builder.Services.AddTransient<IDatabaseAccess>(provider =>
             {
-                return new DatabaseAccess(databaseConnectionString);
+                return new DatabaseAccess(builder.Configuration.GetConnectionString("DatabaseConnection"));
             });
 
 
