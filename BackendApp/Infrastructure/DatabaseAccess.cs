@@ -8,46 +8,53 @@ namespace BackendApp.Infrastructure
     public class DatabaseAccess : IDatabaseAccess
     {
         private readonly string _connectionString;
+        private readonly ILogger<DatabaseAccess> _logger;
 
-        public DatabaseAccess(string connectionString)
+        public DatabaseAccess(string connectionString, ILogger<DatabaseAccess> logger)
         {
             _connectionString = connectionString;
+            _logger = logger;
         }
 
         public async Task<List<BusinessModel>> GetBusinessModelsAsync()
         {
             var businessModels = new List<BusinessModel>();
-
-            using (SqlConnection conn = new SqlConnection(_connectionString))
+            try
             {
-                using (SqlCommand cmd = new SqlCommand("usp_GetBusinessModels", conn))
+                using (SqlConnection conn = new SqlConnection(_connectionString))
                 {
-                    cmd.CommandType = CommandType.StoredProcedure;
-
-                    await conn.OpenAsync();
-                    using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
+                    using (SqlCommand cmd = new SqlCommand("usp_GetBusinessModels", conn))
                     {
-                        while (await reader.ReadAsync())
+                        cmd.CommandType = CommandType.StoredProcedure;
+
+                        await conn.OpenAsync();
+                        using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
                         {
-                            Guid result = new Guid();
-                            var model = new BusinessModel
+                            while (await reader.ReadAsync())
                             {
-                                Id = int.Parse(reader["Id"].ToString()),
-                                Name = reader["Name"].ToString(),
-                                Description = reader["Description"].ToString(),
-                                BusinessType = reader["BusinessType"].ToString(),
-                                City = reader["City"].ToString(),
-                                PostalCode = reader["PostalCode"].ToString(),
-                                Street = reader["Street"].ToString(),
-                                BuildingNumber = reader["BuildingNumber"].ToString(),
-                                OwnerId = Guid.TryParse(reader["OwnerId"].ToString(), out result) ? result : result
-                            };
-                            businessModels.Add(model);
+                                Guid result = new Guid();
+                                var model = new BusinessModel
+                                {
+                                    Id = int.Parse(reader["Id"].ToString()),
+                                    Name = reader["Name"].ToString(),
+                                    Description = reader["Description"].ToString(),
+                                    BusinessType = reader["BusinessType"].ToString(),
+                                    City = reader["City"].ToString(),
+                                    PostalCode = reader["PostalCode"].ToString(),
+                                    Street = reader["Street"].ToString(),
+                                    BuildingNumber = reader["BuildingNumber"].ToString(),
+                                    OwnerId = Guid.TryParse(reader["OwnerId"].ToString(), out result) ? result : result
+                                };
+                                businessModels.Add(model);
+                            }
                         }
                     }
                 }
             }
-
+            catch (Exception ex) 
+            {
+                _logger.Log(LogLevel.Error, $"There was error executing GetBusinessModelsAsync method on database: {ex.Message}");
+            }
             return businessModels;
         }
 

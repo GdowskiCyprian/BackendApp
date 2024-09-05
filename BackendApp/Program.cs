@@ -1,4 +1,4 @@
-
+using Serilog;
 using BackendApp.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -17,6 +17,12 @@ namespace BackendApp
             builder.Services.AddControllers();
 
             var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]);
+
+            Log.Logger = new LoggerConfiguration()
+            .WriteTo.File("logs/backendApp.txt", rollingInterval: RollingInterval.Day)
+            .CreateLogger();
+
+            builder.Host.UseSerilog();
 
             builder.Services.AddAuthentication(options =>
             {
@@ -71,14 +77,14 @@ namespace BackendApp
             });
             builder.Services.AddTransient<IDatabaseAccess>(provider =>
             {
-                return new DatabaseAccess(builder.Configuration.GetConnectionString("DatabaseConnection"));
+                return new DatabaseAccess(builder.Configuration.GetConnectionString("DatabaseConnection"), provider.GetRequiredService<ILogger<DatabaseAccess>>());
             });
 
 
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
+            if (app.Environment.IsDevelopment() || app.Environment.IsProduction())
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();

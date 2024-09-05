@@ -45,7 +45,6 @@ namespace BackendApp.Controllers
             return result > 0 ? Ok() : StatusCode(500);
         }
 
-        // Visits methods
         [HttpGet("GetVisits")]
         public async Task<ActionResult<List<VisitModel>>> GetVisits()
         {

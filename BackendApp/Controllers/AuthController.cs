@@ -20,7 +20,6 @@ namespace BackendApp.Controllers
         [HttpPost("login")]
         public IActionResult Login([FromBody] LoginModel login)
         {
-            // Validate the user credentials (this is just an example, you should validate against your user store)
             if (login.Username == "testuser" && login.Password == "testpassword")
             {
                 var token = GenerateJwtToken();
