@@ -18,9 +18,9 @@ namespace BackendApp.Controllers
         }
 
         [HttpGet("GetBusinessModels")]
-        public async Task<ActionResult<List<BusinessModel>>> GetBusinessModels()
+        public async Task<ActionResult<List<BusinessModel>>> GetBusinessModels(int offset)
         {
-            var businessModels = await _databaseAccess.GetBusinessModelsAsync();
+            var businessModels = await _databaseAccess.GetBusinessModelsAsync(offset);
             return Ok(businessModels);
         }
 
@@ -46,9 +46,9 @@ namespace BackendApp.Controllers
         }
 
         [HttpGet("GetVisits")]
-        public async Task<ActionResult<List<VisitModel>>> GetVisits()
+        public async Task<ActionResult<List<VisitModel>>> GetVisits(int offset)
         {
-            var visits = await _databaseAccess.GetVisitsAsync();
+            var visits = await _databaseAccess.GetVisitsAsync(offset);
             return Ok(visits);
         }
 
@@ -74,9 +74,9 @@ namespace BackendApp.Controllers
         }
 
         [HttpGet("GetVisitsByDateRange")]
-        public async Task<ActionResult<List<VisitModel>>> GetVisitsByDateRange(DateTime dateFrom, DateTime dateTo)
+        public async Task<ActionResult<List<VisitModel>>> GetVisitsByDateRange(DateTime dateFrom, DateTime dateTo, int offset)
         {
-            var visits = await _databaseAccess.GetVisitsByDateRangeAsync(dateFrom, dateTo);
+            var visits = await _databaseAccess.GetVisitsByDateRangeAsync(dateFrom, dateTo, offset);
             return Ok(visits);
         }
     }

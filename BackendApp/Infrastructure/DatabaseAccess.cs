@@ -16,7 +16,7 @@ namespace BackendApp.Infrastructure
             _logger = logger;
         }
 
-        public async Task<List<BusinessModel>> GetBusinessModelsAsync()
+        public async Task<List<BusinessModel>> GetBusinessModelsAsync(int offset)
         {
             var businessModels = new List<BusinessModel>();
             try
@@ -26,6 +26,7 @@ namespace BackendApp.Infrastructure
                     using (SqlCommand cmd = new SqlCommand("usp_GetBusinessModels", conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@offset", offset);
 
                         await conn.OpenAsync();
                         using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
@@ -120,7 +121,7 @@ namespace BackendApp.Infrastructure
             }
         }
 
-        public async Task<List<VisitModel>> GetVisitsAsync()
+        public async Task<List<VisitModel>> GetVisitsAsync(int offset)
         {
             var visits = new List<VisitModel>();
 
@@ -129,6 +130,7 @@ namespace BackendApp.Infrastructure
                 using (SqlCommand cmd = new SqlCommand("usp_GetVisits", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@offset", offset);
 
                     await conn.OpenAsync();
                     using (SqlDataReader reader = await cmd.ExecuteReaderAsync())
@@ -211,7 +213,7 @@ namespace BackendApp.Infrastructure
                 }
             }
         }
-        public async Task<List<VisitModel>> GetVisitsByDateRangeAsync(DateTime dateFrom, DateTime dateTo)
+        public async Task<List<VisitModel>> GetVisitsByDateRangeAsync(DateTime dateFrom, DateTime dateTo, int offset)
         {
             var visits = new List<VisitModel>();
 
@@ -222,6 +224,7 @@ namespace BackendApp.Infrastructure
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@DateFrom", dateFrom);
                     cmd.Parameters.AddWithValue("@DateTo", dateTo);
+                    cmd.Parameters.AddWithValue("@offset", offset);
 
                     await conn.OpenAsync();
                     using (SqlDataReader reader = await cmd.ExecuteReaderAsync())

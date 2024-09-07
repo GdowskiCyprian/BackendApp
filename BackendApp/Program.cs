@@ -19,6 +19,7 @@ namespace BackendApp
             var key = Encoding.ASCII.GetBytes(builder.Configuration["Jwt:Key"]);
 
             Log.Logger = new LoggerConfiguration()
+            .WriteTo.Console()
             .WriteTo.File("logs/backendApp.txt", rollingInterval: RollingInterval.Day)
             .CreateLogger();
 
