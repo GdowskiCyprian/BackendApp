@@ -29,7 +29,7 @@ SELECT [Id]
       ,[Street]
       ,[BuildingNumber]
       ,[OwnerId]
-  FROM [Data].[dbo].[BusinessModels] WITH NOLOCK
+  FROM [Data].[dbo].[BusinessModels] WITH (NOLOCK)
   ORDER BY Id
   OFFSET @offset*10 ROWS
   FETCH NEXT 10 ROWS ONLY
@@ -119,7 +119,7 @@ BEGIN
 	Email, 
 	PhoneNumber, 
 	IsConfirmed
-    FROM Visits WITH NOLOCK
+    FROM Visits WITH (NOLOCK)
 	ORDER BY Id
   OFFSET @offset*10 ROWS
   FETCH NEXT 10 ROWS ONLY
@@ -183,7 +183,7 @@ CREATE OR ALTER PROCEDURE usp_GetVisitsByDateRange
 AS
 BEGIN
     SELECT Id, UserId, BusinessId, VisitTime, Email, PhoneNumber, IsConfirmed
-    FROM Visits WITH NOLOCK
+    FROM Visits WITH (NOLOCK)
     WHERE CAST(VisitTime AS DATE) BETWEEN @DateFrom AND @DateTo
     ORDER BY Id
   OFFSET @offset*10 ROWS
